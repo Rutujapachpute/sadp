@@ -1,0 +1,122 @@
+Q.1 Write a Java Program to implement Abstract Factory Pattern for Shape interface.
+[15 M].
+
+interface Shape {
+	void draw();
+}
+
+// Concrete Shapes
+class Circle implements Shape {
+	public void draw() {
+		System.out.println("Drawing a Circle");
+	}
+}
+
+class Rectangle implements Shape {
+	public void draw() {
+		System.out.println("Drawing a Rectangle");
+	}
+}
+
+class Square implements Shape {
+	public void draw() {
+		System.out.println("Drawing a Square");
+	}
+}
+
+// Abstract Factory interface
+interface AbstractFactory {
+	Shape getShape(String shapeType);
+}
+
+// Concrete Factory for Shapes
+class ShapeFactory implements AbstractFactory {
+	public Shape getShape(String shapeType) {
+		if (shapeType == null)
+			return null;
+		if (shapeType.equalsIgnoreCase("CIRCLE")) {
+			return new Circle();
+		} else if (shapeType.equalsIgnoreCase("RECTANGLE")) {
+			return new Rectangle();
+		} else if (shapeType.equalsIgnoreCase("SQUARE")) {
+			return new Square();
+		}
+		return null;
+	}
+}
+
+// Factory Producer to get factories
+class FactoryProducer {
+	public static AbstractFactory getFactory() {
+		// In more complex examples, you can return different factories here
+		return new ShapeFactory();
+	}
+}
+
+// Test class
+public class Main {
+	public static void main(String[] args) {
+		AbstractFactory shapeFactory = FactoryProducer.getFactory();
+
+		Shape circle = shapeFactory.getShape("CIRCLE");
+		circle.draw();
+
+		Shape rectangle = shapeFactory.getShape("RECTANGLE");
+		rectangle.draw();
+
+		Shape square = shapeFactory.getShape("SQUARE");
+		square.draw();
+	}
+}
+
+
+/*OUTPUT
+Drawing a Circle
+Drawing a Rectangle
+Drawing a Square
+
+*/
+
+Q.2 Write a program to get temperature notification using Arduino.
+
+1. Components Needed (in Tinkercad)
+Components:
+ Arduino Uno R3
+ LM35/ TMP36 (temperature sensor)
+ 1 LED (for visual notification)
+ 1 Resistor (220Ω for LED)
+ Breadboard & wires
+
+2. Circuit Design (Connections)
+Connections:
+ LM35/ TMP36:
+o VCC → 5V
+o GND → GND
+o OUT → A0 (Analog Pin)
+ LED:
+o Anode (+) → Pin 13 (or any digital pin) via 220Ω resistor
+o Cathode (–) → GND
+
+int sensorPin = A0; 
+int ledPin = 13; 
+float temperature; 
+void setup() {
+Serial.begin (9600); 
+pinMode(ledPin, OUTPUT);
+}
+void loop () {
+int reading = analogRead(sensorPin); 
+temperature = (reading * 5.0 * 100.0) / 1024; 
+Serial.print("Temperature: ");
+Serial.print(temperature);
+
+Serial.println(" *C");
+
+if (temperature > 30) {
+digitalWrite(ledPin, HIGH); 
+Serial.println("⚠️ High Temperature!");
+} else {
+digitalWrite(ledPin, LOW); 
+}
+delay(1000); 
+}

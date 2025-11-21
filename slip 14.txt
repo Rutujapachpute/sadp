@@ -1,0 +1,172 @@
+Q.1 Write a Java Program to implement Command Design Pattern for Command Interface 
+with execute() . Use this to create variety of commands for LightOnCommand, 
+LightOffCommand, GarageDoorUpCommand, StereoOnWithCDComman. [15 M]
+
+// Command Interface
+interface Command {
+	public void execute();
+}
+
+// Receiver Classes
+class Stereo {
+	public void On() {
+		System.out.println("Stereo is on");
+	}
+}
+
+class GarageDoor {
+	public void Up() {
+		System.out.println("Garage Door is Up");
+	}
+}
+
+class Light {
+	public void on() {
+		System.out.println("Light is on");
+	}
+
+	public void off() {
+		System.out.println("Light is off");
+	}
+}
+
+// Command Implementations
+class GarageDoorUpCommand implements Command {
+	GarageDoor garageDoor;
+
+	public GarageDoorUpCommand(GarageDoor garageDoor) {
+		this.garageDoor = garageDoor;
+	}
+
+	public void execute() {
+		garageDoor.Up();
+	}
+}
+
+class LightOnCommand implements Command {
+	Light light;
+
+	public LightOnCommand(Light light) {
+		this.light = light;
+	}
+
+	public void execute() {
+		light.on();
+	}
+}
+
+class LightOffCommand implements Command {
+	Light light;
+
+	public LightOffCommand(Light light) {
+		this.light = light;
+	}
+
+	public void execute() {
+		light.off();
+	}
+}
+
+class StereoOn implements Command {
+	Stereo stereo;
+
+	public StereoOn(Stereo stereo) {
+		this.stereo = stereo;
+	}
+
+	public void execute() {
+		stereo.On();
+	}
+}
+
+// Invoker Class
+class SimpleRemoteControl {
+	Command slot;
+
+	public SimpleRemoteControl() {
+	}
+
+	public void setCommand(Command command) {
+		slot = command;
+	}
+
+	public void buttonWasPressed() {
+		slot.execute();
+	}
+}
+
+// Client
+public class Main {
+	public static void main(String[] args) {
+		SimpleRemoteControl remote = new SimpleRemoteControl();
+
+		// Light ON
+		Light light = new Light();
+		LightOnCommand lightOn = new LightOnCommand(light);
+		remote.setCommand(lightOn);
+		remote.buttonWasPressed();
+
+		// Light OFF
+		LightOffCommand lightOff = new LightOffCommand(light);
+		remote.setCommand(lightOff);
+		remote.buttonWasPressed();
+
+		// Garage Door UP
+		GarageDoor garageDoor = new GarageDoor();
+		GarageDoorUpCommand garageDoorUp = new GarageDoorUpCommand(garageDoor);
+		remote.setCommand(garageDoorUp);
+		remote.buttonWasPressed();
+
+		// Stereo ON
+		Stereo stereo = new Stereo();
+		StereoOn stereoOn = new StereoOn(stereo);
+		remote.setCommand(stereoOn);
+		remote.buttonWasPressed();
+	}
+}
+
+/*OUTPUT
+Light is on
+Light is off
+Garage Door is Up
+Stereo is on
+*/
+Q.2 Write a program to detects the vibration of an object with sensor using Arduino.
+[15 M]
+
+1. Components Needed (in Tinkercad)
+ Arduino Uno R3
+ Tilt switch sensor (SW-200D) (or pushbutton → simulating vibration sensor)
+ 10kΩ resistor (for pull-down if using button; tilt switch has internal)
+ 1 LED + 220Ω resistor (indicator for vibration)
+ Jumper wires
+
+2. Circuit Design (Connections)
+If using tilt switch in Tinkercad (SW-200D):
+ One leg of tilt switch → 5V
+ Other leg → Arduino digital pin 2
+ Also connect that leg → 10kΩ resistor → GND (pull-down resistor so it reads LOW when no vibration)
+LED connections:
+ LED Anode (long leg) → Arduino D13 (through 220Ω resistor)
+ LED Cathode (short leg) → GND
+
+const int vibrationPin = 2; 
+const int ledPin = 13; 
+int vibrationState = 0;
+void setup () {
+pinMode(vibrationPin, INPUT);
+pinMode(ledPin, OUTPUT);
+Serial.begin(9600);
+}
+void loop () {
+vibrationState = digitalRead(vibrationPin);
+if (vibrationState == HIGH) {
+digitalWrite(ledPin, HIGH); 
+Serial.println("Vibration Detected!");
+} else {
+
+digitalWrite(ledPin, LOW); 
+Serial.println("No Vibration");
+}
+delay(200); 
+}

@@ -1,0 +1,120 @@
+Q.1 Write a JAVA Program to implement built-in support (java.util.Observable) Weather 
+station with members temperature, humidity, pressure and methods 
+mesurmentsChanged(), setMesurment(), getTemperature(), getHumidity(), 
+getPressure() [15 M]
+
+import java.util.Observable;
+import java.util.Observer;
+
+// Observable class
+class WeatherData extends Observable {
+    private float temperature;
+    private float humidity;
+    private float pressure;
+
+    public void setMeasurements(float temperature, float humidity, float pressure) {
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        measurementsChanged();
+    }
+
+    public void measurementsChanged() {
+        setChanged();          // Marks this Observable as changed
+        notifyObservers();     // Notify all registered observers
+    }
+
+    public float getTemperature() {
+        return temperature;
+    }
+
+    public float getHumidity() {
+        return humidity;
+    }
+
+    public float getPressure() {
+        return pressure;
+    }
+}
+
+// Observer class
+class CurrentConditionsDisplay implements Observer {
+    private float temperature;
+    private float humidity;
+
+    public CurrentConditionsDisplay(Observable observable) {
+        observable.addObserver(this);  // Register observer
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (o instanceof WeatherData) {
+            WeatherData weatherData = (WeatherData) o;
+            this.temperature = weatherData.getTemperature();
+            this.humidity = weatherData.getHumidity();
+            display();
+        }
+    }
+
+    public void display() {
+        System.out.println("Current conditions: " + temperature + "°C and " + humidity + "% humidity");
+    }
+}
+
+// Main class to run the program
+public class Main2 {
+    public static void main(String[] args) {
+        WeatherData weatherData = new WeatherData();
+
+        // Create observer and register it
+        CurrentConditionsDisplay currentDisplay = new CurrentConditionsDisplay(weatherData);
+
+        // Simulate some weather measurements
+        weatherData.setMeasurements(28.5f, 65f, 1012f);
+        weatherData.setMeasurements(30.2f, 70f, 1010f);
+        weatherData.setMeasurements(25.6f, 90f, 1008f);
+    }
+}
+
+/* OUTPUT  
+Current conditions: 28.5°C and 65.0% humidity
+Current conditions: 30.2°C and 70.0% humidity
+Current conditions: 25.6°C and 90.0% humidity
+*/
+
+Q.2 Write a program for LDR to vary the light intensity of LED using Arduino
+
+1. Components Needed in Tinkercad
+ Arduino Uno board
+ 1 × LED
+ 1 × 220Ω resistor (for LED)
+ potentiometer
+ Jumper wires
+
+2. Circuit Connections
+1. LED Circuit
+o Connect LED anode (long leg) → Arduino pin 9 (PWM pin).
+o Connect LED cathode (short leg) → 220Ω resistor → GND.
+2.potentiometer
+o One leg of pot→ 5V.
+o Other leg of LDR → A0 
+o Other leg→ GND.
+
+int LDR_Pin = A0; 
+int LED_Pin = 9;
+void setup() {
+pinMode(LED_Pin, OUTPUT);
+Serial.begin(9600); 
+}
+void loop () {
+int ldrValue = analogRead (LDR_Pin); 
+
+
+int ledBrightness = map (ldrValue, 0, 1023, 255, 0);
+analogWrite (LED_Pin, ledBrightness); 
+Serial.print ("LDR Value: ");
+Serial.print (ldrValue);
+Serial.print (" LED Brightness: ");
+Serial.println (ledBrightness);
+delay (100);
+}

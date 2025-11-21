@@ -1,0 +1,212 @@
+Q. 1 Write a Java Program to implement State Pattern for Gumball Machine.
+Create instance variable that holds current state from there, we just need to handle all 
+actions, behaviors and state transition that can happen [15 M]
+
+interface State {
+	void insertCoin();
+
+	void turnCrank();
+
+	void dispense();
+}
+
+// Concrete States
+class NoCoinState implements State {
+	GumballMachine machine;
+
+	public NoCoinState(GumballMachine machine) {
+		this.machine = machine;
+	}
+
+	public void insertCoin() {
+		System.out.println("Coin inserted.");
+		machine.setState(machine.getHasCoinState());
+	}
+
+	public void turnCrank() {
+		System.out.println("Insert a coin first.");
+	}
+
+	public void dispense() {
+		System.out.println("No coin, no gumball.");
+	}
+}
+
+class HasCoinState implements State {
+	GumballMachine machine;
+
+	public HasCoinState(GumballMachine machine) {
+		this.machine = machine;
+	}
+
+	public void insertCoin() {
+		System.out.println("Already have a coin.");
+	}
+
+	public void turnCrank() {
+		System.out.println("Crank turned...");
+		machine.setState(machine.getSoldState());
+	}
+
+	public void dispense() {
+		System.out.println("Turn the crank first.");
+	}
+}
+
+class SoldState implements State {
+	GumballMachine machine;
+
+	public SoldState(GumballMachine machine) {
+		this.machine = machine;
+	}
+
+	public void insertCoin() {
+		System.out.println("Please wait, dispensing...");
+	}
+
+	public void turnCrank() {
+		System.out.println("Already turned.");
+	}
+
+	public void dispense() {
+		machine.releaseBall();
+		if (machine.getCount() > 0) {
+			machine.setState(machine.getNoCoinState());
+		} else {
+			System.out.println("Oops! Out of gumballs.");
+			machine.setState(machine.getSoldOutState());
+		}
+	}
+}
+
+class SoldOutState implements State {
+	GumballMachine machine;
+
+	public SoldOutState(GumballMachine machine) {
+		this.machine = machine;
+	}
+
+	public void insertCoin() {
+		System.out.println("Can't insert coin. Sold out.");
+	}
+
+	public void turnCrank() {
+		System.out.println("No gumballs.");
+	}
+
+	public void dispense() {
+		System.out.println("Nothing to dispense.");
+	}
+}
+
+// Context
+class GumballMachine {
+	private State noCoinState;
+	private State hasCoinState;
+	private State soldState;
+	private State soldOutState;
+
+	private State currentState;
+	private int count = 0;
+
+	public GumballMachine(int count) {
+		this.count = count;
+		noCoinState = new NoCoinState(this);
+		hasCoinState = new HasCoinState(this);
+		soldState = new SoldState(this);
+		soldOutState = new SoldOutState(this);
+
+		currentState = (count > 0) ? noCoinState : soldOutState;
+	}
+
+	public void insertCoin() {
+		currentState.insertCoin();
+	}
+
+	public void turnCrank() {
+		currentState.turnCrank();
+		currentState.dispense();
+	}
+
+	public void releaseBall() {
+		if (count > 0) {
+			System.out.println("A gumball rolls out...");
+			count--;
+		}
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setState(State state) {
+		currentState = state;
+	}
+
+	public State getNoCoinState() {
+		return noCoinState;
+	}
+
+	public State getHasCoinState() {
+		return hasCoinState;
+	}
+
+	public State getSoldState() {
+		return soldState;
+	}
+
+	public State getSoldOutState() {
+		return soldOutState;
+	}
+}
+
+// Main class to test
+public class Main {
+	public static void main(String[] args) {
+		GumballMachine machine = new GumballMachine(2);
+
+		machine.insertCoin();
+		machine.turnCrank();
+
+		machine.insertCoin();
+		machine.turnCrank();
+
+		machine.insertCoin(); // Should say sold out
+	}
+}
+
+/*OUTPUT
+Coin inserted.
+Crank turned...
+A gumball rolls out...
+Coin inserted.
+Crank turned...
+A gumball rolls out...
+Oops! Out of gumballs.
+Can't insert coin. Sold out.
+
+
+Q.2 Start Raspberry Pi and execute various Linux commands in command terminal window: 
+ls, cd, touch, mv, rm, man, mkdir, rmdir, tar, gzip, cat, more, less, ps, sudo, cron, chown, 
+chgrp, pingetc.
+
+Sr. No 	Command 	Purpose		
+1	 ls 		Lists directory contents 
+2	 cd 		Change directory 
+3	 touch 		Create empty file 
+4 	mv 		Move or rename file 
+5 	rm		 Delete file 
+6 	man 		Get help for a command 
+7 	mkdir	 	Make new directory 
+8	 rmdir 		Remove empty folder 
+9 	tar 		Archive files 
+10 	gzip 		Compress file 
+11 	cat 		View file content 
+12	 more 		View long file pagewise 
+13 	less 		Scroll through file 
+14 	ps 		View running processes 
+15	 sudo 		Run as admin 
+16	 cron		 Schedule task 
+17 	chown 		Change file owner 
+18 	chgrp 		Change file group 
+19	 ping 		Test network

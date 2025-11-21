@@ -1,0 +1,111 @@
+Q.1 Write a Java Program to implement I/O Decorator for converting uppercase letters to 
+lower case letters. [15 M]
+
+import java.io.*;
+
+class LowerCaseInputStream extends FilterInputStream {
+	public LowerCaseInputStream(InputStream in) {
+		super(in);
+	}
+
+	@Override
+	public int read() throws IOException {
+		int c = super.read();
+		return (c == -1 ? c : Character.toLowerCase((char) c));
+	}
+
+	@Override
+	public int read(byte[] b, int offset, int len) throws IOException {
+		int result = super.read(b, offset, len);
+		if (result == -1)
+			return result;
+		for (int i = offset; i < offset + result; i++) {
+			b[i] = (byte) Character.toLowerCase((char) b[i]);
+		}
+		return result;
+	}
+}
+
+public class Main {
+	public static void main(String[] args) {
+		System.out.println("Enter text (type 'exit' to quit):");
+
+		try (InputStream in = new LowerCaseInputStream(System.in);
+				BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+
+			String line;
+			while ((line = br.readLine()) != null) {
+				if (line.equalsIgnoreCase("exit"))
+					break;
+				System.out.println("Lowercase: " + line);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+
+/*OUTPUT*
+Enter text (type 'exit' to quit):
+HELLO WORLD!
+Lowercase: hello world!
+Good Morning
+Lowercase: good morning
+exit
+/
+
+Q.2 Write python programs on Pi like:
+a) Read your name and print Hello message with name 
+b) Read two numbers and print their sum, difference, product and division.
+c) Word and character count of a given string.
+d) Area of a given shape (rectangle, triangle and circle) reading shape and appropriate 
+values from standard input.
+
+a) Read your name and print Hello messag
+Code:
+name = input("Enter your name: ")
+print("Hello, " + name + "!")
+
+b) Read two numbers and print their sum, difference, product and division.
+Code:
+a = float(input("Enter first number: "))
+b = float(input("Enter second number: "))
+print("Sum:", a + b)
+print("Difference:", a - b)
+print("Product:", a * b)
+if b != 0:
+print("Division:", a / b)
+else:
+print("Division: Cannot divide by zero")
+
+c) Word and character count of a given string.
+Code:
+text = input("Enter a string: ")
+word_count = len(text.split())
+char_count = len(text)
+print("Word count:", word_count)
+print("Character count:", char_count)
+
+d) Area of a given shape (rectangle, triangle and circle) reading shape and appropriate
+values from standard input.
+Code:
+shape = input("Enter the shape (rectangle/triangle/circle): ").lower()
+if shape == "rectangle":
+length = float(input("Enter length: "))
+width = float(input("Enter width: "))
+area = length * width
+elif shape == "triangle":
+base = float(input("Enter base: "))
+height = float(input("Enter height: "))
+
+area = 0.5 * base * height
+elif shape == "circle":
+radius = float(input("Enter radius: "))
+area = 3.14159 * radius * radius
+else:
+area = None
+print("Invalid shape!")
+if area is not None:
+print("Area of the", shape, "is:", area)

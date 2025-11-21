@@ -1,0 +1,152 @@
+Q.1 Write a Java Program to implement Strategy Pattern for Duck Behavior. Create 
+instance variable that holds current state of Duck from there, we just need to handle 
+all Flying Behaviors and Quack Behavior [15 M]
+
+interface FlyBehavior {
+	void fly();
+}
+
+// QuackBehavior interface
+interface QuackBehavior {
+	void quack();
+}
+
+// Concrete Fly Behaviors
+class FlyWithWings implements FlyBehavior {
+	public void fly() {
+		System.out.println("Flying with wings!");
+	}
+}
+
+class NoFly implements FlyBehavior {
+	public void fly() {
+		System.out.println("I can't fly.");
+	}
+}
+
+// Concrete Quack Behaviors
+class QuackSound implements QuackBehavior {
+	public void quack() {
+		System.out.println("Quack!");
+	}
+}
+
+class Silent implements QuackBehavior {
+	public void quack() {
+		System.out.println("<< Silence >>");
+	}
+}
+
+// Duck class using Strategy pattern
+class Duck {
+	FlyBehavior flyBehavior;
+	QuackBehavior quackBehavior;
+
+	public Duck(FlyBehavior fly, QuackBehavior quack) {
+		this.flyBehavior = fly;
+		this.quackBehavior = quack;
+	}
+
+	public void performFly() {
+		flyBehavior.fly();
+	}
+
+	public void performQuack() {
+		quackBehavior.quack();
+	}
+
+	// You can change behavior at runtime
+	public void setFlyBehavior(FlyBehavior fly) {
+		flyBehavior = fly;
+	}
+
+	public void setQuackBehavior(QuackBehavior quack) {
+		quackBehavior = quack;
+	}
+}
+
+// Main class to test
+public class Main {
+	public static void main(String[] args) {
+		Duck duck1 = new Duck(new FlyWithWings(), new QuackSound());
+		System.out.println("Duck 1:");
+		duck1.performFly();
+		duck1.performQuack();
+
+		System.out.println("\nDuck 2:");
+		Duck duck2 = new Duck(new NoFly(), new Silent());
+		duck2.performFly();
+		duck2.performQuack();
+
+		// Changing duck2's behavior at runtime
+		System.out.println("\nChanging Duck 2's flying behavior...");
+		duck2.setFlyBehavior(new FlyWithWings());
+		duck2.performFly();
+	}
+}
+
+/*OUTPUT
+Duck 1:
+Flying with wings!
+Quack!
+
+Duck 2:
+I can't fly.
+<< Silence >>
+
+Changing Duck 2's flying behavior...
+Flying with wings!
+*/
+Q.2 Write python programs on Pi like: 
+a) Print a name 'n' times, where name and n are read from standard input, using for and 
+while loops. 
+b) Handle Divided by Zero Exception. 
+c) Print current time for 10 times with an interval of10seconds. 
+d) Read a fileline byline and print the word count of each line
+
+a) Print a name 'n' times, where name and n are read from standard input, using for and
+while loops.
+Code:
+name = input ("Enter your name: ")
+n = int (input("How many times to print your name? "))
+for i in range(n):
+print(name)
+
+Code using while loop:
+name = input ("Enter your name: ")
+n = int(input("How many times to print your name? "))
+count = 0
+while count < n:
+print(name)
+count += 1
+
+b) Handle Divided by Zero Exception.
+Code:
+try:
+num1 = float (input ("Enter numerator: "))
+num2 = float (input ("Enter denominator: "))
+result = num1 / num2
+print ("Result:", result)
+except ZeroDivisionError:
+print ("Error: Cannot divide by zero!")
+
+c) Print current time for 10 times with an interval of 10 seconds.
+Code:
+import time
+from datetime import datetime
+for i in range(10):
+current_time = datetime.now().strftime("%H:%M:%S")
+print("Time:", current_time)
+time.sleep(10) 
+
+d) Read a fileline byline and print the word count of each line.
+Code:
+
+filename = "sample.txt"
+with open(filename, "r") as file:
+line_number = 1
+for line in file:
+words = line.split() # Split line into words
+count = len(words)
+print(f"Line {line_number} has {count} words.")
+line_number += 1

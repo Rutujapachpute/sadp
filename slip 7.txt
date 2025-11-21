@@ -1,0 +1,113 @@
+Q.1 Write a Java Program to implement undo command to test Ceiling fan. [15 M]
+
+interface Command {
+	public void execute();
+}
+
+class CeilingFan {
+	public void on() {
+		System.out.println("Ceiling Fan is on");
+	}
+
+	public void off() {
+		System.out.println("Ceiling Fan is off");
+	}
+}
+
+class CeilingFanOnCommand implements Command {
+	CeilingFan c;
+
+	public CeilingFanOnCommand(CeilingFan l) {
+		this.c = l;
+	}
+
+	public void execute() {
+		c.on();
+	}
+}
+
+class CeilingFanOffCommand implements Command {
+	CeilingFan c;
+
+	public CeilingFanOffCommand(CeilingFan l) {
+		this.c = l;
+	}
+
+	public void execute() {
+		c.off();
+	}
+
+}
+
+class SimpleRemoteControl {
+	Command slot;
+
+	public SimpleRemoteControl() {
+	}
+
+	public void setCommand(Command command) {
+		slot = command;
+	}
+
+	public void buttonWasPressed() {
+		slot.execute();
+	}
+}
+
+public class Main {
+	public static void main(String[] args) {
+		SimpleRemoteControl remote = new SimpleRemoteControl();
+
+		CeilingFan ceilingFan = new CeilingFan();
+		CeilingFanOnCommand ceilingFanOn = new CeilingFanOnCommand(ceilingFan);
+		remote.setCommand(ceilingFanOn);
+		remote.buttonWasPressed();
+
+		CeilingFanOffCommand ceilingFanOff = new CeilingFanOffCommand(ceilingFan);
+		remote.setCommand(ceilingFanOff);
+		remote.buttonWasPressed();
+
+	}
+}
+
+/*OUTPUT
+Ceiling Fan is on
+Ceiling Fan is off
+*/
+
+Q.2 Write a program for LDR to vary the light intensity of LED using Arduino.
+
+1. Components Needed in Tinkercad
+ Arduino Uno board
+ 1 × LED
+ 1 × 220Ω resistor (for LED)
+ potentiometer
+ Jumper wires
+
+2. Circuit Connections
+1. LED Circuit
+o Connect LED anode (long leg) → Arduino pin 9 (PWM pin).
+o Connect LED cathode (short leg) → 220Ω resistor → GND.
+2.potentiometer
+o One leg of pot→ 5V.
+o Other leg of LDR → A0 
+o Other leg→ GND.
+
+int LDR_Pin = A0; 
+int LED_Pin = 9;
+void setup() {
+pinMode(LED_Pin, OUTPUT);
+Serial.begin(9600); 
+}
+void loop () {
+int ldrValue = analogRead (LDR_Pin); 
+
+
+int ledBrightness = map (ldrValue, 0, 1023, 255, 0);
+analogWrite (LED_Pin, ledBrightness); 
+Serial.print ("LDR Value: ");
+Serial.print (ldrValue);
+Serial.print (" LED Brightness: ");
+Serial.println (ledBrightness);
+delay (100);
+}

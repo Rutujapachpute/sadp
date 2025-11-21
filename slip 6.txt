@@ -1,0 +1,117 @@
+Q.1 Write a Java Program to implement command pattern to test Remote Control
+[15 M]
+
+interface Command {
+	public void execute();
+}
+
+class Light {
+	public void on() {
+		System.out.println("Light is on");
+	}
+
+	public void off() {
+		System.out.println("Light is off");
+	}
+}
+
+class LightOnCommand implements Command {
+	Light l1;
+
+	public LightOnCommand(Light a) {
+		this.l1 = a;
+	}
+
+	public void execute() {
+		l1.on();
+	}
+}
+
+class LightOffCommand implements Command {
+	Light l1;
+
+	public LightOffCommand(Light a) {
+		this.l1 = a;
+	}
+
+	public void execute() {
+		l1.off();
+	}
+
+}
+
+class SimpleRemoteControl {
+	Command slot;
+
+	public SimpleRemoteControl() {
+	}
+
+	public void setCommand(Command command) {
+		slot = command;
+	}
+
+	public void buttonWasPressed() {
+		slot.execute();
+	}
+}
+
+public class Main5 {
+	public static void main(String[] args) {
+		SimpleRemoteControl r1 = new SimpleRemoteControl();
+		Light l1 = new Light();
+		LightOnCommand lo = new LightOnCommand(l1);
+		r1.setCommand(lo);
+		r1.buttonWasPressed();
+		LightOffCommand lO = new LightOffCommand(l1);
+		r1.setCommand(lO);
+		r1.buttonWasPressed();
+	}
+}
+/*OUTPUT
+Light is on
+Light is off
+*/
+
+Q.2 Write a program to get temperature notification using Arduino.
+
+1. Components Needed (in Tinkercad)
+Components:
+ Arduino Uno R3
+ LM35/ TMP36 (temperature sensor)
+ 1 LED (for visual notification)
+ 1 Resistor (220Ω for LED)
+ Breadboard & wires
+
+2. Circuit Design (Connections)
+Connections:
+ LM35/ TMP36:
+o VCC → 5V
+o GND → GND
+o OUT → A0 (Analog Pin)
+ LED:
+o Anode (+) → Pin 13 (or any digital pin) via 220Ω resistor
+o Cathode (–) → GND
+
+int sensorPin = A0; 
+int ledPin = 13; 
+float temperature; 
+void setup() {
+Serial.begin (9600); 
+pinMode(ledPin, OUTPUT);
+}
+void loop () {
+int reading = analogRead(sensorPin); 
+temperature = (reading * 5.0 * 100.0) / 1024; 
+Serial.print("Temperature: ");
+Serial.print(temperature);
+
+Serial.println(" *C");
+
+if (temperature > 30) {
+digitalWrite(ledPin, HIGH); 
+Serial.println("⚠️ High Temperature!");
+} else {
+digitalWrite(ledPin, LOW); 
+}
+delay(1000); 
+}

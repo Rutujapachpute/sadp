@@ -1,0 +1,122 @@
+Q.1 Write a JAVA Program to implement built-in support (java.util.Observable) Weather 
+station with members temperature, humidity, pressure and methods 
+mesurmentsChanged(), setMesurment(), getTemperature(), getHumidity(), 
+getPressure() [15 M]
+
+import java.util.Observable;
+import java.util.Observer;
+
+
+class WeatherData extends Observable {
+    private float temperature;
+    private float humidity;
+    private float pressure;
+
+    public void setMeasurements(float temperature, float humidity, float pressure) {
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        measurementsChanged();
+    }
+
+    public void measurementsChanged() {
+        setChanged();          // Marks this Observable as changed
+        notifyObservers();     // Notify all registered observers
+    }
+
+    public float getTemperature() {
+        return temperature;
+    }
+
+    public float getHumidity() {
+        return humidity;
+    }
+
+    public float getPressure() {
+        return pressure;
+    }
+}
+
+
+class CurrentConditionsDisplay implements Observer {
+    private float temperature;
+    private float humidity;
+
+    public CurrentConditionsDisplay(Observable observable) {
+        observable.addObserver(this);  // Register observer
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (o instanceof WeatherData) {
+            WeatherData weatherData = (WeatherData) o;
+            this.temperature = weatherData.getTemperature();
+            this.humidity = weatherData.getHumidity();
+            display();
+        }
+    }
+
+    public void display() {
+        System.out.println("Current conditions: " + temperature + "°C and " + humidity + "% humidity");
+    }
+}
+
+
+public class Main2 {
+    public static void main(String[] args) {
+        WeatherData weatherData = new WeatherData();
+
+        
+        CurrentConditionsDisplay currentDisplay = new CurrentConditionsDisplay(weatherData);
+
+        
+        weatherData.setMeasurements(28.5f, 65f, 1012f);
+        weatherData.setMeasurements(30.2f, 70f, 1010f);
+        weatherData.setMeasurements(25.6f, 90f, 1008f);
+    }
+}
+
+/* OUTPUT  
+Current conditions: 28.5°C and 65.0% humidity
+Current conditions: 30.2°C and 70.0% humidity
+Current conditions: 25.6°C and 90.0% humidity
+*/
+
+Q. 2 Write a program to detects the vibration of an object with sensor using Arduino.
+
+1. Components Needed (in Tinkercad)
+ Arduino Uno R3
+ Tilt switch sensor (SW-200D) (or pushbutton → simulating vibration sensor)
+ 10kΩ resistor (for pull-down if using button; tilt switch has internal)
+ 1 LED + 220Ω resistor (indicator for vibration)
+ Jumper wires
+
+2. Circuit Design (Connections)
+If using tilt switch in Tinkercad (SW-200D):
+ One leg of tilt switch → 5V
+ Other leg → Arduino digital pin 2
+ Also connect that leg → 10kΩ resistor → GND (pull-down resistor so it reads LOW when no vibration)
+LED connections:
+ LED Anode (long leg) → Arduino D13 (through 220Ω resistor)
+ LED Cathode (short leg) → GND
+
+const int vibrationPin = 2; 
+const int ledPin = 13; 
+int vibrationState = 0;
+void setup () {
+pinMode(vibrationPin, INPUT);
+pinMode(ledPin, OUTPUT);
+Serial.begin(9600);
+}
+void loop () {
+vibrationState = digitalRead(vibrationPin);
+if (vibrationState == HIGH) {
+digitalWrite(ledPin, HIGH); 
+Serial.println("Vibration Detected!");
+} else {
+
+digitalWrite(ledPin, LOW); 
+Serial.println("No Vibration");
+}
+delay(200); 
+}

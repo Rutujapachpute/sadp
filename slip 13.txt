@@ -1,0 +1,99 @@
+Q.1 Write a Java Program to implement an Adapter design pattern in mobile charger. 
+Define two classes – Volt (to measure volts) and Socket (producing constant volts of 
+120V). Build an adapter that can produce 3 volts, 12 volts and default 120 volts. 
+Implements Adapter pattern using Class Adapter [15 M]
+
+class Socket {
+	public int getVolt() {
+		return 120;
+	}
+}
+
+// Adapter class (Class Adapter) inheriting from Socket
+class SocketAdapter extends Socket {
+
+	public int get3Volt() {
+		return convertVolt(40); // 120/40 = 3V
+	}
+
+	public int get12Volt() {
+		return convertVolt(10); // 120/10 = 12V
+	}
+
+	// Default 120V (inherited getVolt())
+
+	private int convertVolt(int divisor) {
+		return super.getVolt() / divisor;
+	}
+}
+
+// Test class
+public class Main {
+	public static void main(String[] args) {
+		SocketAdapter adapter = new SocketAdapter();
+
+		System.out.println("Default Voltage: " + adapter.getVolt() + "V");
+		System.out.println("12 Volts: " + adapter.get12Volt() + "V");
+		System.out.println("3 Volts: " + adapter.get3Volt() + "V");
+	}
+}
+
+
+/*OUTPUT
+Default Voltage: 120V
+12 Volts: 12V
+3 Volts: 3V
+
+*/
+
+Q.2 Write a program to measure the distance using ultrasonic sensor and make LED blink 
+using Arduino.
+
+components:
+ Arduino Uno R3
+ Ultrasonic Sensor (HC-SR04)
+ Breadboard (optional)
+ Jumper wires
+ 1 LED
+ 1 Resistor (220Ω or 330Ω)
+
+Connections:
+ VCC (Ultrasonic) → 5V (Arduino)
+ GND (Ultrasonic) → GND (Arduino)
+ TRIG (Ultrasonic) → Digital Pin 9 (Arduino)
+ ECHO (Ultrasonic) → Digital Pin 10 (Arduino)
+ LED Anode (long leg) → Arduino Digital Pin 7 (through resistor).
+ Connect the anode to Pin 7.
+ Place a 220Ω resistor between Pin 7 and LED anode (to limit current).
+ LED Cathode (short leg) → GND (Arduino).
+
+const int trigPin = 9; 
+const int echoPin = 10; 
+const int ledPin = 7; 
+long duration;
+int distance;
+void setup () {
+Serial.begin (9600);
+pinMode (trigPin, OUTPUT);
+pinMode (echoPin, INPUT);
+pinMode (ledPin, OUTPUT); 
+}
+void loop () {
+digitalWrite (trigPin, LOW);
+delayMicroseconds (2);
+
+digitalWrite (trigPin, HIGH);
+delayMicroseconds (10);
+digitalWrite (trigPin, LOW);
+duration = pulseIn (echoPin, HIGH);
+distance = duration * 0.034 / 2;
+Serial.print ("Distance: ");
+Serial.print (distance);
+Serial.println (" cm");
+if (distance < 200) {
+digitalWrite (ledPin, HIGH); 
+} else {
+digitalWrite (ledPin, LOW); 
+}
+delay(500);
+}

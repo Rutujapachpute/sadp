@@ -1,0 +1,120 @@
+Q.1 Write a Java Program to implement Singleton pattern for multithreading
+[15 M]
+
+public class Main1 {
+	public static void main(String ar[]) {
+		Test1 t = new Test1();
+		Test1 t2 = new Test1();
+		Test1 t3 = new Test1();
+		Thread tt = new Thread(t);
+		Thread tt2 = new Thread(t2);
+		Thread tt3 = new Thread(t3);
+		Thread tt4 = new Thread(t);
+		Thread tt5 = new Thread(t);
+		tt.start();
+		tt2.start();
+		tt3.start();
+		tt4.start();
+		tt5.start();
+	}
+}
+
+final class Test1 implements Runnable { // Override
+	public void run() {
+		for (int i = 0; i < 5; i++) {
+			System.out.println(Thread.currentThread().getName() + " : " + Single.getInstance().hashCode());
+		}
+	}
+}
+
+class Single {
+	private final static Single sing = new Single();
+
+	private Single() {
+	}
+
+	public static Single getInstance() {
+		return sing;
+	}
+}
+
+
+/*OUTPUT 
+Thread-4 : 950668487
+Thread-4 : 950668487
+Thread-4 : 950668487
+Thread-4 : 950668487
+Thread-4 : 950668487
+Thread-1 : 950668487
+Thread-0 : 950668487
+Thread-0 : 950668487
+Thread-0 : 950668487
+Thread-0 : 950668487
+Thread-0 : 950668487
+Thread-3 : 950668487
+Thread-3 : 950668487
+Thread-3 : 950668487
+Thread-3 : 950668487
+Thread-3 : 950668487
+Thread-1 : 950668487
+Thread-1 : 950668487
+Thread-1 : 950668487
+Thread-1 : 950668487
+Thread-2 : 950668487
+Thread-2 : 950668487
+Thread-2 : 950668487
+Thread-2 : 950668487
+Thread-2 : 950668487
+
+
+Q.2 Write a program to measure the distance using ultrasonic sensor and make LED blink 
+using Arduino.
+
+components:
+ Arduino Uno R3
+ Ultrasonic Sensor (HC-SR04)
+ Breadboard (optional)
+ Jumper wires
+ 1 LED
+ 1 Resistor (220Ω or 330Ω)
+
+Connections:
+ VCC (Ultrasonic) → 5V (Arduino)
+ GND (Ultrasonic) → GND (Arduino)
+ TRIG (Ultrasonic) → Digital Pin 9 (Arduino)
+ ECHO (Ultrasonic) → Digital Pin 10 (Arduino)
+ LED Anode (long leg) → Arduino Digital Pin 7 (through resistor).
+ Connect the anode to Pin 7.
+ Place a 220Ω resistor between Pin 7 and LED anode (to limit current).
+ LED Cathode (short leg) → GND (Arduino).
+
+const int trigPin = 9; 
+const int echoPin = 10; 
+const int ledPin = 7; 
+long duration;
+int distance;
+void setup () {
+Serial.begin (9600);
+pinMode (trigPin, OUTPUT);
+pinMode (echoPin, INPUT);
+pinMode (ledPin, OUTPUT); 
+}
+void loop () {
+digitalWrite (trigPin, LOW);
+delayMicroseconds (2);
+
+digitalWrite (trigPin, HIGH);
+delayMicroseconds (10);
+digitalWrite (trigPin, LOW);
+duration = pulseIn (echoPin, HIGH);
+distance = duration * 0.034 / 2;
+Serial.print ("Distance: ");
+Serial.print (distance);
+Serial.println (" cm");
+if (distance < 200) {
+digitalWrite (ledPin, HIGH); 
+} else {
+digitalWrite (ledPin, LOW); 
+}
+delay(500);
+}

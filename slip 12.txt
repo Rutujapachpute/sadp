@@ -1,0 +1,188 @@
+Q.1 Write a Java Program to implement Decorator Pattern for interface Car to define the 
+assemble() method and then decorate it to Sports car and Luxury Car [15 M]
+
+interface Car {
+	void assemble();
+}
+
+class BasicCar implements Car {
+	public void assemble() {
+		System.out.print("Basic Car");
+	}
+}
+
+abstract class CarDecorator implements Car {
+	protected Car decoratedCar;
+
+	public CarDecorator(Car car) {
+		this.decoratedCar = car;
+	}
+
+	public void assemble() {
+		decoratedCar.assemble();
+	}
+}
+
+class SportsCar extends CarDecorator {
+	public SportsCar(Car car) {
+		super(car);
+	}
+
+	public void assemble() {
+		super.assemble();
+		System.out.print(" + Sports Features");
+	}
+}
+
+class LuxuryCar extends CarDecorator {
+	public LuxuryCar(Car car) {
+		super(car);
+	}
+
+	public void assemble() {
+		super.assemble();
+		System.out.print(" + Luxury Features");
+	}
+}
+
+public class Main {
+	public static void main(String[] args) {
+		System.out.print("Basic Car: ");
+		Car basicCar = new BasicCar();
+		basicCar.assemble();
+
+		System.out.print("\n\nSports Car: ");
+		Car sportsCar = new SportsCar(new BasicCar());
+		sportsCar.assemble();
+
+		System.out.print("\n\nLuxury Car: ");
+		Car luxuryCar = new LuxuryCar(new BasicCar());
+		luxuryCar.assemble();
+
+		System.out.print("\n\nSports + Luxury Car: ");
+		Car sportsLuxuryCar = new LuxuryCar(new SportsCar(new BasicCar()));
+		sportsLuxuryCar.assemble();
+	}
+}
+
+/*OUTPUT
+Basic Car: Basic Car
+
+Sports Car: Basic Car + Sports Features
+
+Luxury Car: Basic Car + Luxury Features
+
+Sports + Luxury Car: Basic Car + Sports Features + Luxury Features
+*/
+
+Q.2 Write a program to sense the available networks using Arduino
+
+components:
+ Arduino Uno R3
+ LCD 16×2 (parallel)
+ 10k potentiometer (for LCD contrast)
+ 220 Ω resistor (for backlight)
+ Breadboard (optional)
+ Jumper wires
+
+LCD pin                     Connect to (Arduino / others)
+GND                            GND
+VCC                            5V
+V0 (contrast)	 middle pin of 10kohm pot (other two pot pins → 5V and GND)
+RS 		D12
+RW 		GND
+E 		D11
+DB4 		D5
+DB5		 D4
+DB6 		D3
+DB7		 D2
+A (LED+) 		5V through 220Ω resistor
+K (LED-)		 GND
+
+#include<LiquidCrystal.h>
+LiquidCrystal lcd(12,11,5,4,3,2);
+const char*SSIDS[]={
+  "MyWiFi",
+  "CollegeNet",
+  "Guest123",
+  "Lab_AP",
+  "Cafe_Free"
+};
+int RSSI[]={-45,-70,-82,-55,-60};
+bool LOCKED[]={true,true,false,true,false};
+const int N=sizeof(SSIDS)/sizeof(SSIDS[0]);
+unsigned long lastSwitch=0;
+unsigned long lastScan=0;
+int idx=0;
+
+void printBars(int rssi,int col){
+int bars;
+  if(rssi>=-55)bars=5;
+  else if(rssi>=-65)bars=4;
+  else if(rssi>=-75)bars=3;
+  else if(rssi>=-85)bars=2;
+  else if(rssi>=-95)bars=1;
+    else bars=0;
+    lcd.setCursor(col,1);
+    for(int i=0;i<5;i++){
+    if(i<bars)lcd.print('|');
+    else lcd.print(',');
+  }
+    
+}
+void showNetwork(int i){
+lcd.clear();
+  lcd.setCursor(0,0);
+  String name=SSIDS[i];
+  if(name.length()>16)name.substring(0,16);
+  lcd.print(name);
+  lcd.setCursor(0,1);
+  lcd.print(RSSI[i]);lcd.print("dBm");
+  if(LOCKED[i])
+    lcd.print("Lock");
+  else lcd.print("Open");
+  printBars(RSSI[i],11);
+}
+void scanningAnimation(unsigned long ms){
+unsigned long start=millis();
+  int dot=0;
+  while(millis()-start<ms){
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Scanning");
+  lcd.setCursor(9,0);
+  for(int i=0;i<(dot%4);i++)
+  lcd.print('.');
+  dot++;
+  delay(250);
+  }
+}
+void randomizeRSSI(){
+  for(int i=0;i<N;i++){
+int jitter=random(-5,6);
+RSSI[i]+=jitter;
+if(RSSI[i]<-90) RSSI[i]=-90;
+if(RSSI[i]>-35) RSSI[i]=-35;
+}
+}
+void setup(){
+lcd.begin(16,2);
+  randomSeed(analogRead(A0));
+  lcd.print("Mock WiFi Scan");
+  delay(1000);
+  showNetwork(idx);
+}
+void loop(){
+unsigned long now=millis();
+  if(now-lastScan>=10000UL){
+  scanningAnimation(2000);
+   randomizeRSSI();
+   lastScan=now;
+   showNetwork(idx);
+  }
+  if(now-lastSwitch>=2000UL){
+  idx=(idx+1)%N;
+  showNetwork(idx);
+    lastSwitch=now;
+  }
+}
