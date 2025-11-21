@@ -70,13 +70,13 @@ LCD pin                     Connect to (Arduino / others)
 GND                            GND
 VCC                            5V
 V0 (contrast)	 middle pin of 10kohm pot (other two pot pins → 5V and GND)
-RS 		D12
-RW 		GND
-E 		D11
-DB4 		D5
-DB5		 D4
-DB6 		D3
-DB7		 D2
+RS 						D12
+RW 						GND
+E 						D11
+DB4 					D5
+DB5		 				D4
+DB6 					D3
+DB7						 D2
 A (LED+) 		5V through 220Ω resistor
 K (LED-)		 GND
 
@@ -167,3 +167,4 @@ unsigned long now=millis();
     lastSwitch=now;
   }
 }
+
